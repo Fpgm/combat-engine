@@ -1,0 +1,6 @@
+{
+  "name": "Teamfight Manager - Auto Battler",
+  "description": "Esports manager game featuring pick & ban hero drafting, distinct stats, skills, passives, items, synergies, and real-time 2D arena battles.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
