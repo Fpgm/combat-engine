@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Champion, TeamMember, Item, Role } from '../types/game';
 import { CHAMPIONS } from '../data/champions';
-import { ITEMS, TRAIT_SYNERGIES, ROLE_SYNERGIES } from '../data/items';
+import { ITEMS } from '../data/items';
 import { playDraftPickSound } from '../utils/sound';
 import { TacticalGrid } from './TacticalGrid';
 import { Shield, Zap, Skull, Flame, Crosshair, Sword, Info, Check, Plus, AlertCircle, ArrowRight, Sparkles, Grid } from 'lucide-react';
@@ -104,8 +104,12 @@ export const DraftPhase: React.FC<DraftPhaseProps> = ({
     );
   };
 
-  // Auto-assign random items to AI team
+  // Auto-assign random items to AI team and launch match
   const handleStartMatch = () => {
+    // Validate blue roster is complete
+    if (bluePicks.length < 4) return;
+
+    // Assign random items to AI team
     const updatedRed = redPicks.map((p) => {
       const randomItem = ITEMS[Math.floor(Math.random() * ITEMS.length)];
       return { ...p, itemId: randomItem.id };

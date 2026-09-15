@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Champion, TeamMember } from '../types/game';
+import { TeamMember, Champion } from '../types/game';
 import { CHAMPIONS } from '../data/champions';
 import { ITEMS } from '../data/items';
 import { Play, RotateCcw, Sword, Settings, Zap } from 'lucide-react';

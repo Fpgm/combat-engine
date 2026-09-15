@@ -57,7 +57,7 @@ export default function App() {
     setBlueRoster(bRoster);
     setRedRoster(rRoster);
 
-    const entities = initializeCombatEntities(bRoster, rRoster, 800, 480);
+    const entities = initializeCombatEntities(bRoster, rRoster, 800, 500);
     setCombatEntities(entities);
     setActiveView('arena');
   };
@@ -69,7 +69,7 @@ export default function App() {
     setBlueRoster(bRoster);
     setRedRoster(rRoster);
 
-    const entities = initializeCombatEntities(bRoster, rRoster, 800, 480);
+    const entities = initializeCombatEntities(bRoster, rRoster, 800, 500);
     setCombatEntities(entities);
     setActiveView('arena');
   };

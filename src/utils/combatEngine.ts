@@ -7,7 +7,7 @@ import {
   TeamMember,
 } from '../types/game';
 import { CHAMPIONS } from '../data/champions';
-import { ITEMS, TRAIT_SYNERGIES, ROLE_SYNERGIES } from '../data/items';
+import { ITEMS } from '../data/items';
 import { playHitSound, playSkillSound, playKillSound } from './sound';
 
 export function initializeCombatEntities(
@@ -119,76 +119,7 @@ export function initializeCombatEntities(
     entities.push(createEntity(m, 'red', idx, redRoster.length));
   });
 
-  // Apply Team Synergies
-  applySynergies(entities, 'blue');
-  applySynergies(entities, 'red');
-
   return entities;
-}
-
-function applySynergies(entities: CombatEntity[], team: 'blue' | 'red') {
-  const teamEntities = entities.filter((e) => e.team === team);
-
-  // Count Traits & Roles
-  const traitCounts: Record<string, number> = {};
-  const roleCounts: Record<string, number> = {};
-
-  teamEntities.forEach((e) => {
-    traitCounts[e.trait] = (traitCounts[e.trait] || 0) + 1;
-    roleCounts[e.role] = (roleCounts[e.role] || 0) + 1;
-  });
-
-  // Check Trait Bonuses
-  Object.entries(traitCounts).forEach(([trait, count]) => {
-    const synergy = TRAIT_SYNERGIES[trait as keyof typeof TRAIT_SYNERGIES];
-    if (synergy && count >= synergy.countRequired) {
-      teamEntities.forEach((e) => {
-        if (e.trait === trait) {
-          if (synergy.effectType === 'stat_defense_hp') {
-            e.defense += synergy.value;
-            e.maxHp += 200;
-            e.currentHp += 200;
-          } else if (synergy.effectType === 'stat_as_ms') {
-            e.attackSpeed += 0.25;
-            e.moveSpeed *= 1.15;
-          } else if (synergy.effectType === 'stat_crit_lifesteal') {
-   e.critRate += 0.25;
- } else if (synergy.effectType === 'stat_sp_energy') {
-   e.skillPower += synergy.value;
-   e.energy += 25;
- } else if (synergy.effectType === 'regen') {
-   const regenVal = synergy.value * dt;
-   e.currentHp = Math.min(e.maxHp, e.currentHp + regenVal);
-   e.totalHealingDone += regenVal;
- }
- }
- if (synergy.effectType === 'start_shield') {
- e.shield += synergy.value;
- }
- });
- }
- });
-
-  // Check Role Bonuses
-  Object.entries(roleCounts).forEach(([role, count]) => {
-    const synergy = ROLE_SYNERGIES[role as keyof typeof ROLE_SYNERGIES];
-    if (synergy && count >= synergy.countRequired) {
-      teamEntities.forEach((e) => {
-        if (e.role === role) {
-          if (synergy.effectType === 'stat_crit_mult') {
-            e.critMult += 0.4;
-          } else if (synergy.effectType === 'stat_sp') {
-            e.skillPower += 45;
-          } else if (synergy.effectType === 'stat_range_as') {
-            e.attackRange += 100;
-            e.attackSpeed += 0.2;
-          } else if (synergy.effectType === 'stat_ap_lifesteal') {
-            e.attackPower += 20;
-          }
-        }
-      });
-    }
-  });
 }
 
 export function updateCombatEngine(
