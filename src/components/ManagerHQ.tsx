@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlayerManagerProfile, Champion, Item, RivalTeam } from '../types/game';
+import { PlayerManagerProfile, Champion, Item, RivalTeam, GameMode } from '../types/game';
 import { CHAMPIONS } from '../data/champions';
 import { ITEMS } from '../data/items';
 import { RIVAL_TEAMS } from '../data/opponents';
@@ -9,7 +9,7 @@ import { playDraftPickSound } from '../utils/sound';
 interface ManagerHQProps {
   profile: PlayerManagerProfile;
   onUpdateProfile: (updated: PlayerManagerProfile) => void;
-  onStartMatch: (opponent: RivalTeam) => void;
+  onStartMatch: (mode: GameMode) => void;
 }
 
 export const ManagerHQ: React.FC<ManagerHQProps> = ({ profile, onUpdateProfile, onStartMatch }) => {
@@ -215,7 +215,7 @@ export const ManagerHQ: React.FC<ManagerHQProps> = ({ profile, onUpdateProfile, 
               </div>
 
               <button
-                onClick={() => onStartMatch(rival)}
+                onClick={() => onStartMatch('moba')}
                 className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs rounded-xl shadow transition-transform hover:scale-102 flex items-center justify-center gap-2 cursor-pointer font-mono"
               >
                 <Sword className="w-4 h-4" /> CHALLENGE TO MATCH

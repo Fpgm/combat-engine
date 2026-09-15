@@ -1,27 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { CombatEntity, FloatingText, ParticleEffect, CombatEvent, MatchResult } from '../types/game';
+import type { CombatEntity, FloatingText, ParticleEffect, CombatEvent, MatchResult } from '../types/game';
 import { updateCombatEngine, computePostMatchResult } from '../utils/combatEngine';
 import { CHAMPIONS } from '../data/champions';
 import {
   Play,
   Pause,
-  FastForward,
-  RotateCcw,
   Volume2,
   VolumeX,
-  Shield,
   Zap,
-  Flame,
-  Skull,
-  Crosshair,
-  Heart,
-  Sparkles,
   BarChart3,
   FileText,
   UserCheck,
   Target,
-  Sword,
-  Activity,
 } from 'lucide-react';
 import { isSoundEnabled, setSoundEnabled } from '../utils/sound';
 
@@ -464,7 +454,7 @@ export const ArenaCanvas: React.FC<ArenaCanvasProps> = ({
         ctx.fillStyle = e.team === 'blue' ? '#0284c7' : '#e11d48';
         ctx.fillRect(barX, barY, barWidth * hpPercent, barHeight);
 
-        // Shield Overlay
+        // Overlay
         if (e.shield > 0) {
           const shieldPercent = Math.min(1, e.shield / e.maxHp);
           ctx.fillStyle = '#38bdf8';

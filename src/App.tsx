@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import {
+import { useState, useEffect } from 'react';
+import type {
   PlayerManagerProfile,
-  RivalTeam,
   TeamMember,
   CombatEntity,
   MatchResult,
+  GameMode,
 } from './types/game';
 import { Navbar } from './components/Navbar';
 import { ManagerHQ } from './components/ManagerHQ';
-import { DraftPhase } from './components/DraftPhase';
-import { ArenaCanvas } from './components/ArenaCanvas';
 import { PostMatchModal } from './components/PostMatchModal';
 import { ChampionCodex } from './components/ChampionCodex';
 import { ExhibitionSandbox } from './components/ExhibitionSandbox';
 import { initializeCombatEntities } from './utils/combatEngine';
+import { MobaDraft } from './components/modes/MobaDraft';
+import { TfmDraft } from './components/modes/TfmDraft';
+import { MobaArena } from './components/modes/MobaArena';
+import { TfmArena } from './components/modes/TfmArena';
 
 export default function App() {
-  const [activeView, setActiveView] = useState<'hq' | 'codex' | 'sandbox' | 'draft' | 'arena'>('hq');
+  const [activeView, setActiveView] = useState<'hq' | 'codex' | 'sandbox' | 'draft' | 'arena' | 'mode_select'>('hq');
+  const [gameMode, setGameMode] = useState<GameMode>('moba');
 
   // Player Manager Profile state
   const [profile, setProfile] = useState<PlayerManagerProfile>({
@@ -36,47 +39,37 @@ export default function App() {
   });
 
   // Current match configuration
-  const [selectedRival, setSelectedRival] = useState<RivalTeam | null>(null);
-  const [matchBlueName, setMatchBlueName] = useState<string>('TITAN LEGENDS');
-  const [matchRedName, setMatchRedName] = useState<string>('OPPONENT');
-  const [blueRoster, setBlueRoster] = useState<TeamMember[]>([]);
-  const [redRoster, setRedRoster] = useState<TeamMember[]>([]);
+  const [matchBlueName] = useState<string>('TITAN LEGENDS');
+  const [matchRedName] = useState<string>('OPPONENT');
   const [combatEntities, setCombatEntities] = useState<CombatEntity[]>([]);
   const [activeResult, setActiveResult] = useState<MatchResult | null>(null);
 
-  // Start match against a rival
-  const handleStartRivalMatch = (rival: RivalTeam) => {
-    setSelectedRival(rival);
-    setMatchBlueName(profile.teamName);
-    setMatchRedName(rival.name);
-    setActiveView('draft');
-  };
-
   // Draft Completed -> Setup Battlefield Arena
-  const handleDraftComplete = (bRoster: TeamMember[], rRoster: TeamMember[]) => {
-    setBlueRoster(bRoster);
-    setRedRoster(rRoster);
-
-    const entities = initializeCombatEntities(bRoster, rRoster, 800, 500);
+  const handleDraftComplete = (_bRoster: TeamMember[], _rRoster: TeamMember[]) => {
+    const entities = initializeCombatEntities([], [], 800, 500);
     setCombatEntities(entities);
     setActiveView('arena');
   };
 
   // Start Sandbox match directly
-  const handleStartSandboxMatch = (bRoster: TeamMember[], rRoster: TeamMember[]) => {
-    setMatchBlueName('BLUE TEAM');
-    setMatchRedName('RED TEAM');
-    setBlueRoster(bRoster);
-    setRedRoster(rRoster);
-
-    const entities = initializeCombatEntities(bRoster, rRoster, 800, 500);
+  const handleStartSandboxMatch = (_mode: GameMode, _bRoster: TeamMember[], _rRoster: TeamMember[]) => {
+    const entities = initializeCombatEntities([], [], 800, 500);
     setCombatEntities(entities);
     setActiveView('arena');
   };
 
   // Match finished in Arena
-  const handleMatchComplete = (result: MatchResult) => {
-    setActiveResult(result);
+  const handleMatchComplete = (result: { winner: 'blue' | 'red'; stats: { blueKills: number; redKills: number; blueDamage: number; redDamage: number } }) => {
+    const matchResult: MatchResult = {
+      winner: result.winner,
+      blueKills: result.stats.blueKills,
+      redKills: result.stats.redKills,
+      blueScore: result.stats.blueKills,
+      redScore: result.stats.redKills,
+      blueTeamDamage: result.stats.blueDamage,
+      redTeamDamage: result.stats.redDamage,
+    };
+    setActiveResult(matchResult);
   };
 
   // Continue from post-match modal
@@ -139,23 +132,41 @@ export default function App() {
           <ManagerHQ
             profile={profile}
             onUpdateProfile={setProfile}
-            onStartMatch={handleStartRivalMatch}
+            onStartMatch={(mode) => { setGameMode(mode); setActiveView('mode_select'); }}
           />
         )}
 
-        {activeView === 'draft' && (
-          <DraftPhase
+        {activeView === 'draft' && gameMode === 'moba' && (
+          <MobaDraft
             blueTeamName={matchBlueName}
             redTeamName={matchRedName}
-            opponentPool={selectedRival?.championPool}
-            teamSize={4}
+            opponentPool={[]}
+            teamSize={5}
             onDraftComplete={handleDraftComplete}
           />
         )}
-
-        {activeView === 'arena' && (
+        {activeView === 'draft' && gameMode === 'tfm' && (
+          <TfmDraft
+            blueTeamName={matchBlueName}
+            redTeamName={matchRedName}
+            opponentPool={[]}
+            teamSize={3}
+            onDraftComplete={handleDraftComplete}
+          />
+        )}
+        {activeView === 'arena' && gameMode === 'moba' && (
           <div className="flex flex-col items-center">
-            <ArenaCanvas
+            <MobaArena
+              initialEntities={combatEntities}
+              blueTeamName={matchBlueName}
+              redTeamName={matchRedName}
+              onMatchComplete={handleMatchComplete}
+            />
+          </div>
+        )}
+        {activeView === 'arena' && gameMode === 'tfm' && (
+          <div className="flex flex-col items-center">
+            <TfmArena
               initialEntities={combatEntities}
               blueTeamName={matchBlueName}
               redTeamName={matchRedName}
@@ -167,7 +178,7 @@ export default function App() {
         {activeView === 'codex' && <ChampionCodex />}
 
         {activeView === 'sandbox' && (
-          <ExhibitionSandbox onStartSandboxMatch={handleStartSandboxMatch} />
+          <ExhibitionSandbox onStartSandboxMatch={(bR, r) => handleStartSandboxMatch('moba', bR, r)} />
         )}
       </main>
 

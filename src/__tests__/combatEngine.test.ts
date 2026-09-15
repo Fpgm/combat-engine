@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { initializeCombatEntities } from '../utils/combatEngine'
-import { TeamMember } from '../types/game'
+import type { TeamMember } from '../types/game'
 
-const makeTeamMember = (id: string, champId: string, name: string): TeamMember => ({
+const makeTeamMember = (_id: string, champId: string, name: string): TeamMember => ({
   championId: champId,
   name,
   level: 1,
@@ -17,16 +17,17 @@ const blueTeam: TeamMember[] = [
 const redTeam: TeamMember[] = [
   makeTeamMember('r1', 'vespera', 'Vespera'),
   makeTeamMember('r2', 'vortek', 'Vortek'),
+  makeTeamMember('r3', 'darius', 'Darius'),
 ]
 
 describe('initializeCombatEntities', () => {
   it('creates entities for both teams', () => {
     const entities = initializeCombatEntities(blueTeam, redTeam, 800, 500)
-    expect(entities.length).toBe(4)
+    expect(entities.length).toBe(5)
     const blue = entities.filter((e) => e.team === 'blue')
     const red = entities.filter((e) => e.team === 'red')
     expect(blue.length).toBe(2)
-    expect(red.length).toBe(2)
+    expect(red.length).toBe(3)
   })
 
   it('sets correct team and champion IDs', () => {
@@ -51,7 +52,9 @@ describe('Infernal burn ability', () => {
     expect(kaelen.skill.id).toBe('meteor_flame')
     expect(kaelen.passive.id).toBe('flame_aura')
   })
+})
 
+describe('Darius has skill and passive', () => {
   it('Darius has skill and passive', () => {
     const entities = initializeCombatEntities(blueTeam, redTeam, 800, 500)
     const darius = entities.find((e) => e.championId === 'darius')!
@@ -62,8 +65,7 @@ describe('Infernal burn ability', () => {
 
 describe('updateCombatEngine', () => {
   it('does not crash with valid entities', () => {
-    const entities = initializeCombatEntities(blueTeam, redTeam, 800, 500)
     const result = initializeCombatEntities(blueTeam, redTeam, 800, 500)
-    expect(result.length).toBe(4)
+    expect(result.length).toBe(5)
   })
 })

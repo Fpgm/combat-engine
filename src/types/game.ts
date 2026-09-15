@@ -1,5 +1,7 @@
 export type Role = 'Tank' | 'Fighter' | 'Assassin' | 'Mage' | 'Marksman' | 'Support';
 
+export type GameMode = 'moba' | 'tfm';
+
 export interface Skill {
   id: string;
   name: string;
@@ -68,9 +70,13 @@ export interface ChampionMastery {
 
 export interface TeamMember {
   championId: string;
+  name: string;
+  level: number;
+  items: Item[];
+  mastery: ChampionMastery;
   itemId?: string;
-  gridRow?: number; // 0 = Frontline, 1 = Midline, 2 = Backline
-  gridCol?: number; // 0 = Top, 1 = Center, 2 = Bottom
+  gridRow?: number;
+  gridCol?: number;
 }
 
 export interface RivalTeam {
@@ -199,10 +205,14 @@ export interface MatchResult {
   winner: 'blue' | 'red';
   blueKills: number;
   redKills: number;
-  duration: number; // seconds
-  mvpEntityId: string;
-  entities: CombatEntity[];
-  logs: CombatEvent[];
+  blueScore: number;
+  redScore: number;
+  blueTeamDamage: number;
+  redTeamDamage: number;
+  duration?: number; // seconds
+  mvpEntityId?: string;
+  entities?: CombatEntity[];
+  logs?: CombatEvent[];
 }
 
 export interface PlayerManagerProfile {
@@ -222,4 +232,5 @@ export interface ActiveMatchConfig {
   blueRoster: TeamMember[];
   redRoster: TeamMember[];
   teamSize: number;
+  gameMode: GameMode;
 }

@@ -23,12 +23,12 @@ export const PostMatchModal: React.FC<PostMatchModalProps> = ({
   const calculateRewards = () => {
     const winnerTeam = isBlueWinner ? 'blue' : 'red';
     const loserTeam = winnerTeam === 'blue' ? 'red' : 'blue';
-    const winnerEntities = result.entities.filter((e) => e.team === winnerTeam);
-    const loserEntities = result.entities.filter((e) => e.team === loserTeam);
+    const winnerEntities = result.entities!.filter((e) => e.team === winnerTeam);
+    const loserEntities = result.entities!.filter((e) => e.team === loserTeam);
 
-    const totalKills = result.entities.reduce((sum, e) => sum + e.kills, 0);
-    const totalAssists = result.entities.reduce((sum, e) => sum + e.assists, 0);
-    const totalDamage = result.entities.reduce((sum, e) => sum + e.totalDamageDealt, 0);
+    const totalKills = result.entities!.reduce((sum, e) => sum + e.kills, 0);
+    const totalAssists = result.entities!.reduce((sum, e) => sum + e.assists, 0);
+    const totalDamage = result.entities!.reduce((sum, e) => sum + e.totalDamageDealt, 0);
 
     let goldEarned: number;
     let lpEarned: number;
