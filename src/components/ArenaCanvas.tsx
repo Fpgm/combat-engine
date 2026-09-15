@@ -733,7 +733,7 @@ export const ArenaCanvas: React.FC<ArenaCanvasProps> = ({
                     <div>
                       <h4 className="font-extrabold text-white text-sm">{selectedEntity.name}</h4>
                       <p className="text-[10px] text-cyan-400">
-                        {selectedEntity.role} • {selectedEntity.trait}
+                        {selectedEntity.role}
                       </p>
                     </div>
                   </div>

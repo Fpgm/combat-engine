@@ -312,7 +312,7 @@ export const DraftPhase: React.FC<DraftPhaseProps> = ({
                     <div>
                       <h4 className="font-bold text-white text-sm">{champ.name}</h4>
                       <p className="text-xs text-sky-400 font-mono">
-                        {champ.role} • {champ.trait}
+                        {champ.role}
                       </p>
                     </div>
                   </div>
@@ -417,7 +417,7 @@ export const DraftPhase: React.FC<DraftPhaseProps> = ({
                   </div>
                   <span className="text-xs font-bold text-white truncate w-full">{champ.name}</span>
                   <span className="text-[10px] text-sky-400 font-mono mt-0.5">{champ.role}</span>
-                  <span className="text-[9px] text-slate-500 font-mono">{champ.trait}</span>
+                  <span className="text-[9px] text-slate-500 font-mono"></span>
 
                   {isBanned && (
                     <div className="absolute inset-0 bg-rose-950/80 rounded-xl flex items-center justify-center text-rose-400 font-bold text-xs font-mono">
@@ -445,7 +445,7 @@ export const DraftPhase: React.FC<DraftPhaseProps> = ({
                   </h4>
                   <p className="text-xs text-sky-400 font-mono">
                     Role: <span className="text-white font-bold">{hoveredChampion.role}</span> | Faction:{' '}
-                    <span className="text-white font-bold">{hoveredChampion.trait}</span>
+                    <span className="text-white font-bold"></span>
                   </p>
                   <p className="text-xs text-slate-300 mt-1">{hoveredChampion.lore}</p>
                 </div>

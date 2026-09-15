@@ -72,7 +72,6 @@ export function initializeCombatEntities(
       name: champ.name,
       team,
       role: champ.role,
-      trait: champ.trait,
       color: champ.avatarColor,
       x,
       y,

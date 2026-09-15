@@ -2,7 +2,7 @@ import { TeamMember } from '../types/game';
 
 export interface ActiveSynergy {
   id: string;
-  type: 'trait' | 'role';
+  type: 'role';
   key: string;
   name: string;
   count: number;

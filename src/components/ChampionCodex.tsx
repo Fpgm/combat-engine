@@ -12,7 +12,7 @@ export const ChampionCodex: React.FC = () => {
         <BookOpen className="w-6 h-6 text-amber-400" />
         <div>
           <h2 className="text-2xl font-black text-white font-mono">CHAMPION ARCHIVE & CODEX</h2>
-          <p className="text-xs text-slate-400 font-mono">Inspect hero abilities, passive traits, and combat stat scaling</p>
+          <p className="text-xs text-slate-400 font-mono">Inspect hero abilities, passives, and combat stat scaling</p>
         </div>
       </div>
 
@@ -42,7 +42,7 @@ export const ChampionCodex: React.FC = () => {
                   <div>
                     <h4 className="font-bold text-white text-sm">{champ.name}</h4>
                     <p className="text-[11px] text-sky-400 font-mono">
-                      {champ.role} • {champ.trait}
+                      {champ.role}
                     </p>
                   </div>
                 </div>
@@ -65,7 +65,7 @@ export const ChampionCodex: React.FC = () => {
             </div>
             <div>
               <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">
-                {selectedChamp.trait} {selectedChamp.role}
+                 {selectedChamp.role}
               </span>
               <h3 className="text-2xl font-black text-white">{selectedChamp.name}</h3>
               <p className="text-xs text-slate-400 italic">"{selectedChamp.title}"</p>

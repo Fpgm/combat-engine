@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   PlayerManagerProfile,
   RivalTeam,
@@ -84,6 +84,19 @@ export default function App() {
     const isWin = activeResult?.winner === 'blue';
     const newPoints = Math.max(0, profile.divisionPoints + lpEarned);
 
+    // Save to localStorage
+    try {
+      const savedProfile = {
+        ...profile,
+        funds: profile.funds + goldEarned,
+        trophies: isWin ? profile.trophies + 1 : profile.trophies,
+        divisionPoints: newPoints,
+      };
+      localStorage.setItem('ttl_profile', JSON.stringify(savedProfile));
+    } catch {
+      // localStorage unavailable — silently continue
+    }
+
     setProfile((prev) => ({
       ...prev,
       funds: prev.funds + goldEarned,
@@ -94,6 +107,19 @@ export default function App() {
     setActiveResult(null);
     setActiveView('hq');
   };
+
+  // Load profile from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('ttl_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved) as PlayerManagerProfile;
+        setProfile((prev) => ({ ...prev, ...parsed }));
+      }
+    } catch {
+      // localStorage unavailable or corrupted — use defaults
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">

@@ -18,8 +18,41 @@ export const PostMatchModal: React.FC<PostMatchModalProps> = ({
   onContinue,
 }) => {
   const isBlueWinner = result.winner === 'blue';
-  const goldEarned = isBlueWinner ? 450 : 150;
-  const lpEarned = isBlueWinner ? 25 : -12;
+
+  // Dynamic rewards based on match performance
+  const calculateRewards = () => {
+    const winnerTeam = isBlueWinner ? 'blue' : 'red';
+    const loserTeam = winnerTeam === 'blue' ? 'red' : 'blue';
+    const winnerEntities = result.entities.filter((e) => e.team === winnerTeam);
+    const loserEntities = result.entities.filter((e) => e.team === loserTeam);
+
+    const totalKills = result.entities.reduce((sum, e) => sum + e.kills, 0);
+    const totalAssists = result.entities.reduce((sum, e) => sum + e.assists, 0);
+    const totalDamage = result.entities.reduce((sum, e) => sum + e.totalDamageDealt, 0);
+
+    let goldEarned: number;
+    let lpEarned: number;
+
+    if (isBlueWinner) {
+      // Victory: base + performance bonus
+      const killGold = totalKills * 50;
+      const assistGold = totalAssists * 20;
+      const damageGold = Math.floor(totalDamage * 0.1);
+      goldEarned = Math.min(1500, Math.floor(150 + killGold + assistGold + damageGold));
+      lpEarned = 25 + totalKills * 5 + totalAssists * 2 + Math.floor(totalDamage / 500);
+    } else {
+      // Defeat: reduced reward but still something
+      const killGold = totalKills * 30;
+      const assistGold = totalAssists * 10;
+      const damageGold = Math.floor(totalDamage * 0.05);
+      goldEarned = Math.max(50, Math.floor(150 + killGold + assistGold + damageGold));
+      lpEarned = Math.max(-20, -12 + totalKills * 3 + totalAssists + Math.floor(totalDamage / 1000));
+    }
+
+    return { goldEarned, lpEarned };
+  };
+
+  const { goldEarned, lpEarned } = calculateRewards();
 
   const mvpEntity = result.entities.find((e) => e.id === result.mvpEntityId) || result.entities[0];
 

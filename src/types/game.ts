@@ -1,7 +1,5 @@
 export type Role = 'Tank' | 'Fighter' | 'Assassin' | 'Mage' | 'Marksman' | 'Support';
 
-export type Trait = 'Infernal' | 'Ironclad' | 'Shadow' | 'Mystic' | 'Cyber' | 'Nature' | 'Celestial';
-
 export interface Skill {
   id: string;
   name: string;
@@ -42,7 +40,6 @@ export interface Champion {
   name: string;
   title: string;
   role: Role;
-  trait: Trait;
   avatarColor: string; // Tailwind color or hex
   accentColor: string;
   baseStats: ChampionStats;
@@ -107,7 +104,6 @@ export interface CombatEntity {
   name: string;
   team: 'blue' | 'red';
   role: Role;
-  trait: Trait;
   color: string;
   
   // Position & Movement

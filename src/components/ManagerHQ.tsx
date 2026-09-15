@@ -3,7 +3,7 @@ import { PlayerManagerProfile, Champion, Item, RivalTeam } from '../types/game';
 import { CHAMPIONS } from '../data/champions';
 import { ITEMS } from '../data/items';
 import { RIVAL_TEAMS } from '../data/opponents';
-import { Trophy, Coins, Award, Sword, Shield, Zap, ShoppingBag, ArrowUpCircle, Users, Sparkles } from 'lucide-react';
+import { Trophy, Coins, Award, Sword, Shield, Zap, ShoppingBag, ArrowUpCircle, Users, Sparkles, ShoppingCart, Save, Upload, RotateCcw } from 'lucide-react';
 import { playDraftPickSound } from '../utils/sound';
 
 interface ManagerHQProps {
@@ -51,7 +51,35 @@ export const ManagerHQ: React.FC<ManagerHQProps> = ({ profile, onUpdateProfile, 
     };
 
     onUpdateProfile(updatedProfile);
+    // Save to localStorage
+    try {
+      localStorage.setItem('ttl_profile', JSON.stringify(updatedProfile));
+    } catch {
+      // Silently continue
+    }
     playDraftPickSound();
+  };
+
+  // Save profile to localStorage
+  const handleSaveProfile = () => {
+    try {
+      localStorage.setItem('ttl_profile', JSON.stringify(profile));
+    } catch {
+      // Silently continue
+    }
+  };
+
+  // Load profile from localStorage
+  const handleLoadProfile = () => {
+    try {
+      const saved = localStorage.getItem('ttl_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved) as PlayerManagerProfile;
+        onUpdateProfile(parsed);
+      }
+    } catch {
+      // Silently continue
+    }
   };
 
   return (
@@ -90,6 +118,10 @@ export const ManagerHQ: React.FC<ManagerHQProps> = ({ profile, onUpdateProfile, 
               <p className="text-amber-400 font-black font-mono text-base">{profile.trophies}</p>
             </div>
           </div>
+          <div className="bg-slate-950 border border-slate-800 px-3 py-2.5 rounded-xl flex items-center gap-2" title="Items owned">
+            <ShoppingBag className="w-4 h-4 text-violet-400" />
+            <span className="text-violet-400 font-black font-mono text-xs">{profile.unlockedItems.length}</span>
+          </div>
         </div>
       </div>
 
@@ -125,7 +157,21 @@ export const ManagerHQ: React.FC<ManagerHQProps> = ({ profile, onUpdateProfile, 
               : 'bg-slate-900 text-slate-400 hover:bg-slate-850'
           }`}
         >
-          <ShoppingBag className="w-4 h-4" /> EQUIPMENT ARMORY
+          <ShoppingCart className="w-4 h-4" /> EQUIPMENT ARMORY
+        </button>
+        <button
+          onClick={handleSaveProfile}
+          className="px-3 py-2.5 rounded-xl font-mono text-xs font-bold transition-all flex items-center gap-2 cursor-pointer bg-slate-800 text-emerald-400 hover:bg-slate-750 border border-emerald-800"
+          title="Save profile"
+        >
+          <Save className="w-3 h-3" /> SAVE
+        </button>
+        <button
+          onClick={handleLoadProfile}
+          className="px-3 py-2.5 rounded-xl font-mono text-xs font-bold transition-all flex items-center gap-2 cursor-pointer bg-slate-800 text-sky-400 hover:bg-slate-750 border border-sky-800"
+          title="Load profile"
+        >
+          <Upload className="w-3 h-3" /> LOAD
         </button>
       </div>
 
