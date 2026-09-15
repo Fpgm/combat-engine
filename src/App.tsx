@@ -140,7 +140,7 @@ export default function App() {
           <MobaDraft
             blueTeamName={matchBlueName}
             redTeamName={matchRedName}
-            opponentPool={[]}
+            opponentPool={selectedRival?.championPool || []}
             teamSize={5}
             onDraftComplete={handleDraftComplete}
           />
@@ -149,7 +149,7 @@ export default function App() {
           <TfmDraft
             blueTeamName={matchBlueName}
             redTeamName={matchRedName}
-            opponentPool={[]}
+            opponentPool={selectedRival?.championPool || []}
             teamSize={3}
             onDraftComplete={handleDraftComplete}
           />
